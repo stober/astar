@@ -90,33 +90,61 @@ def astar(neighbors, start, goal, hcost, dist):
 
 if __name__ == '__main__':
 
-    start = 0
-    goal = 6
+    if True:
+        pq = pqueue(ties = 'LIFO')
+        pq.push(15,'a')
+        pq.push(15,'b')
+        pq.push(15,'c')
+        pq.push(14,'d')
+        pq.push(16,'e')
+        print "LIFO"
+        print pq.pop() #d
+        print pq.pop() #c
+        print pq.pop() #b
+        print pq.pop() #a
+        print pq.pop() #e
 
-    # http://en.wikipedia.org/wiki/File:AstarExample.gif
-    neighbors = {0:[1,2],
-                 1:[3],
-                 2:[4],
-                 3:[6],
-                 4:[5],
-                 5:[6],
-                 6:[]}
+        print "FIFO"
+        pq = pqueue(ties = 'FIFO')
+        pq.push(15,'a')
+        pq.push(15,'b')
+        pq.push(15,'c')
+        pq.push(14,'d')
+        pq.push(16,'e')
+        print pq.pop() #d
+        print pq.pop() #a
+        print pq.pop() #b
+        print pq.pop() #c
+        print pq.pop() #e
 
-    costs = {(0,1):2,
-             (0,2):1.5,
-             (1,3):3,
-             (2,4):2,
-             (3,6):2,
-             (4,5):4,
-             (5,6):4}
+    if False:
+        start = 0
+        goal = 6
 
-    def nfunction(indx):
-        return neighbors[indx]
+        # http://en.wikipedia.org/wiki/File:AstarExample.gif
+        neighbors = {0:[1,2],
+                     1:[3],
+                     2:[4],
+                     3:[6],
+                     4:[5],
+                     5:[6],
+                     6:[]}
 
-    def dist(indx1, indx2):
-        return costs[indx1,indx2]
+        costs = {(0,1):2,
+                 (0,2):1.5,
+                 (1,3):3,
+                 (2,4):2,
+                 (3,6):2,
+                 (4,5):4,
+                 (5,6):4}
 
-    def hcost(indx1,indx2): # makes astar == dijkstra's algorithm
-        return 0.0
+        def nfunction(indx):
+            return neighbors[indx]
 
-    print astar(nfunction, start, goal, hcost, dist)
+        def dist(indx1, indx2):
+            return costs[indx1,indx2]
+
+        def hcost(indx1,indx2): # makes astar == dijkstra's algorithm
+            return 0.0
+
+        print astar(nfunction, start, goal, hcost, dist)
