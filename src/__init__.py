@@ -46,7 +46,7 @@ def reconstruct(partialmap, node):
 
 def astar(neighbors, start, goal, hcost, dist):
     """
-    neighbors: a dictionary that maps each node to a list of neighbors.
+    neighbors: a function that returns an iterator over neighbors.
     start: the index of the start node.
     goal: the index of the goal node.
     hcost: heuristic cost function.
@@ -73,7 +73,7 @@ def astar(neighbors, start, goal, hcost, dist):
             return reconstruct(partialmap, goal)
 
         closedset.add(current)
-        for neighbor in neighbors[current]:
+        for neighbor in neighbors(current):
 
             if neighbor in closedset:
                 continue
@@ -110,10 +110,13 @@ if __name__ == '__main__':
              (4,5):4,
              (5,6):4}
 
+    def nfunction(indx):
+        return neighbors[indx]
+
     def dist(indx1, indx2):
         return costs[indx1,indx2]
 
     def hcost(indx1,indx2): # makes astar == dijkstra's algorithm
         return 0.0
 
-    print astar(neighbors, start, goal, hcost, dist)
+    print astar(nfunction, start, goal, hcost, dist)
