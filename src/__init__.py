@@ -78,7 +78,7 @@ def astar(neighbors, start, goal, hcost, dist):
             if neighbor in closedset:
                 continue
 
-            tenative_gscore = gscore.get(current, 0) + dist[current,neighbor]
+            tenative_gscore = gscore.get(current, 0) + dist(current,neighbor)
 
             if not neighbor in openset or tenative_gscore < gscore.get(neighbor,0):
                 partialmap[neighbor] = current
@@ -110,7 +110,10 @@ if __name__ == '__main__':
              (4,5):4,
              (5,6):4}
 
+    def dist(indx1, indx2):
+        return costs[indx1,indx2]
+
     def hcost(indx1,indx2): # makes astar == dijkstra's algorithm
         return 0.0
 
-    print astar(neighbors, start, goal, hcost, costs)
+    print astar(neighbors, start, goal, hcost, dist)
