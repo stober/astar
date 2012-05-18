@@ -5,7 +5,7 @@ Contact: stober@gmail.com
 Version: 0.01
 
 This package contains a simple A* search implementation based on the
-psuedo-code from the Wikipedia page on A*:
+pseudo-code from the Wikipedia page on A*:
 http://en.wikipedia.org/w/index.php?title=A*_search_algorithm&oldid=493153707.
 
 The implementation is pure Python.
