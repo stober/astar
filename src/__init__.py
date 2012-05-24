@@ -7,36 +7,56 @@ Description: A* search in Python.
 """
 
 import heapq as hq
+import itertools
 
 class pqueue:
     """
     A priority queue with fast member checking and variable tie
-    breaking (LIFO or FIFO).
+    breaking (LIFO or FIFO). Updated using the recipe from the heapq
+    documentation.
     """
-    def __init__(self, ties = "LIFO"):
-        self.cnt = 0
+
+    def __init__(self, policy = "LIFO"):
+        if policy == 'LIFO':
+            self.step = -1
+        else: # policy == 'FIFO'
+            self.step = 1
+
+        self.counter = itertools.count() # step only allowed in 2.7
         self.heap = []
-        self.set = set()
-        self.ties = ties
+        self.entries = {}
+        self.removed_key = '<REMOVED>'
 
-    def push(self, pri, indx):
-        hq.heappush(self.heap, (pri, self.cnt, indx))
-        self.set.add(indx)
-        if self.ties == "LIFO":
-            self.cnt -= 1
-        else: #FIFO
-            self.cnt += 1
+    def push(self, pri, key):
+        if key in self.entries:
+            self.remove(key)
+        cnt = next(self.counter) * self.step
+        entry = [pri, cnt, key]
+        self.entries[key] = entry
+        hq.heappush(self.heap, entry)
 
-    def __contains__(self, indx):
-        return indx in self.set
+    def __contains__(self, key):
+        return self.entries.has_key(key)
 
     def __len__(self):
-        return len(self.heap)
+        return len(self.entries)
+
+    def remove(self, key):
+        """
+        Removes all items from the priority queue.
+        """
+
+        entry = self.entries.pop(key)
+        entry[-1] = self.removed_key
 
     def pop(self):
-        pri, cnt, indx = hq.heappop(self.heap)
-        self.set.remove(indx)
-        return indx
+        pri, cnt, key = hq.heappop(self.heap)
+
+        while key == self.removed_key:
+            pri, cnt, key = hq.heappop(self.heap)
+
+        del self.entries[key]
+        return key
 
 def reconstruct(partialmap, node):
     if partialmap.has_key(node):
@@ -91,12 +111,13 @@ def astar(neighbors, start, goal, hcost, dist):
 if __name__ == '__main__':
 
     if True:
-        pq = pqueue(ties = 'LIFO')
+        pq = pqueue(policy = 'LIFO')
         pq.push(15,'a')
         pq.push(15,'b')
         pq.push(15,'c')
         pq.push(14,'d')
         pq.push(16,'e')
+        pq.push(200,'a')
         print "LIFO"
         print pq.pop() #d
         print pq.pop() #c
@@ -105,7 +126,7 @@ if __name__ == '__main__':
         print pq.pop() #e
 
         print "FIFO"
-        pq = pqueue(ties = 'FIFO')
+        pq = pqueue(policy = 'FIFO')
         pq.push(15,'a')
         pq.push(15,'b')
         pq.push(15,'c')
